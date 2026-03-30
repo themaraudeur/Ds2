@@ -1,0 +1,563 @@
+/* ════════════════════════════════════════════
+   RESET & BASE
+════════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { width:100%; height:100%; overflow:hidden; }
+body { font-family:'Nunito',sans-serif; color:#fff; }
+
+/* ════════════════════════════════════════════
+   CSS VARIABLES PAR THÈME
+════════════════════════════════════════════ */
+
+/* ── DSi ── */
+body.dsi {
+  --top-bg1:      #0a1830;
+  --top-bg2:      #1a3a70;
+  --bottom-bg1:   #0d1f4a;
+  --bottom-bg2:   #172d6a;
+  --accent:       #6ab4ff;
+  --accent-glow:  rgba(100,180,255,.4);
+  --gold:         #ffd700;
+  --text:         #d0e8ff;
+  --dim:          #4a6a9a;
+  --card-bg:      rgba(10,28,70,.85);
+  --card-border:  rgba(100,180,255,.2);
+  --selected-bg:  rgba(100,180,255,.18);
+  --selected-bdr: rgba(100,180,255,.6);
+  --menu-bg:      rgba(5,15,40,.9);
+  --menu-border:  rgba(100,180,255,.2);
+  --path-color:   rgba(100,180,255,.6);
+  --bar-bg:       rgba(5,10,30,.8);
+}
+
+/* ── 3DS ── */
+body.tds {
+  --top-bg1:      #0f0a28;
+  --top-bg2:      #1e1050;
+  --bottom-bg1:   #120d30;
+  --bottom-bg2:   #1c1448;
+  --accent:       #b080ff;
+  --accent-glow:  rgba(160,100,255,.4);
+  --gold:         #ffd700;
+  --text:         #e0d0ff;
+  --dim:          #5a4080;
+  --card-bg:      rgba(18,12,42,.88);
+  --card-border:  rgba(160,100,255,.2);
+  --selected-bg:  rgba(160,100,255,.18);
+  --selected-bdr: rgba(160,100,255,.6);
+  --menu-bg:      rgba(8,5,22,.9);
+  --menu-border:  rgba(160,100,255,.2);
+  --path-color:   rgba(160,100,255,.6);
+  --bar-bg:       rgba(8,5,22,.85);
+}
+
+/* ── R4 ── */
+body.r4 {
+  --top-bg1:      #060606;
+  --top-bg2:      #111;
+  --bottom-bg1:   #080808;
+  --bottom-bg2:   #0d0d0d;
+  --accent:       #00b4ff;
+  --accent-glow:  rgba(0,180,255,.35);
+  --gold:         #ffd700;
+  --text:         #cccccc;
+  --dim:          #444;
+  --card-bg:      #111;
+  --card-border:  #222;
+  --selected-bg:  rgba(0,180,255,.12);
+  --selected-bdr: rgba(0,180,255,.5);
+  --menu-bg:      #0a0a0a;
+  --menu-border:  #1e1e1e;
+  --path-color:   #336;
+  --bar-bg:       #0a0a0a;
+}
+
+/* ── Wood ── */
+body.wood {
+  --top-bg1:      #120900;
+  --top-bg2:      #241200;
+  --bottom-bg1:   #160a00;
+  --bottom-bg2:   #201000;
+  --accent:       #ffa020;
+  --accent-glow:  rgba(255,160,0,.35);
+  --gold:         #ffd700;
+  --text:         #e8c870;
+  --dim:          #5a3a10;
+  --card-bg:      rgba(30,15,0,.85);
+  --card-border:  rgba(200,120,0,.2);
+  --selected-bg:  rgba(255,160,0,.12);
+  --selected-bdr: rgba(255,160,0,.5);
+  --menu-bg:      rgba(10,5,0,.9);
+  --menu-border:  rgba(200,120,0,.2);
+  --path-color:   rgba(200,120,0,.5);
+  --bar-bg:       rgba(10,5,0,.85);
+}
+
+/* ════════════════════════════════════════════
+   BOOT SCREEN
+════════════════════════════════════════════ */
+#boot {
+  position:fixed; inset:0; z-index:999;
+  background:#000;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:0;
+  transition: opacity .6s;
+}
+#boot.gone { opacity:0; pointer-events:none; }
+
+.boot-health {
+  position:absolute; top:16px; left:0; right:0;
+  text-align:center; font-size:9px; color:#333;
+  line-height:2; padding:0 32px;
+}
+.boot-nintendo {
+  font-family:'Press Start 2P',monospace;
+  font-size:11px; color:#fff; letter-spacing:6px;
+  margin-bottom:26px;
+}
+.boot-ds {
+  font-family:'Press Start 2P',monospace;
+  font-size:56px;
+  background:linear-gradient(135deg,#00d4ff 20%,#ff6b9d 80%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 30px rgba(0,212,255,.55));
+}
+.boot-tap {
+  font-family:'Press Start 2P',monospace;
+  font-size:8px; color:#444; margin-top:48px;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink { 50%{ opacity:0; } }
+
+/* ════════════════════════════════════════════
+   MAIN LAYOUT
+════════════════════════════════════════════ */
+#ui {
+  position:fixed; inset:0;
+  display:flex; flex-direction:column;
+  opacity:0; transition:opacity .4s;
+}
+#ui.visible { opacity:1; }
+
+/* ════════════════════════════════════════════
+   TOP SCREEN
+════════════════════════════════════════════ */
+#top {
+  flex:0 0 38%;
+  position:relative; overflow:hidden;
+  background:linear-gradient(160deg, var(--top-bg1), var(--top-bg2));
+  border-bottom:1px solid var(--card-border);
+}
+
+/* Starfield — DSi & 3DS only */
+body.dsi #top::before,
+body.tds #top::before {
+  content:'';
+  position:absolute; inset:0; pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 8%  12%, rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(180,220,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 55%  8%, rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 78% 55%, rgba(200,220,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 90% 25%, rgba(220,230,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 65% 88%, rgba(180,210,255,.3) 0%,transparent 100%);
+}
+
+/* Top bar (logo + clock) */
+#top-bar {
+  position:absolute; top:0; left:0; right:0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 14px;
+  background:var(--bar-bg);
+  border-bottom:1px solid var(--card-border);
+  backdrop-filter:blur(12px);
+  z-index:2;
+}
+#top-logo {
+  font-family:'Press Start 2P',monospace; font-size:8px;
+  color:var(--accent); text-shadow:0 0 12px var(--accent-glow);
+}
+#top-logo span { color:var(--gold); }
+#top-status { display:flex; align-items:center; gap:10px; }
+#top-clock {
+  font-family:'Press Start 2P',monospace; font-size:9px;
+  color:var(--gold);
+}
+#top-batt {
+  width:22px; height:11px;
+  border:1.5px solid rgba(255,255,255,.3); border-radius:2px;
+  position:relative; display:flex; align-items:center; padding:1.5px;
+}
+#top-batt::after {
+  content:''; position:absolute; right:-4px; top:50%;
+  transform:translateY(-50%); width:2px; height:5px;
+  background:rgba(255,255,255,.3); border-radius:1px;
+}
+#top-batt-fill { height:100%; width:75%; background:#44ff88; border-radius:1px; }
+
+/* ── DSi Banner ── */
+#banner {
+  position:absolute; bottom:0; left:0; right:0;
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px;
+  background:linear-gradient(to top, rgba(0,0,0,.6), transparent);
+  z-index:2;
+}
+body.tds #banner,
+body.r4  #banner,
+body.wood #banner { display:none; }
+
+#banner-icon {
+  width:52px; height:48px; border-radius:8px;
+  background:linear-gradient(135deg,#1a3060,#0d1a3a);
+  display:flex; align-items:center; justify-content:center;
+  font-size:26px; flex-shrink:0;
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+#banner-title {
+  font-family:'Press Start 2P',monospace; font-size:8px;
+  color:var(--text); line-height:1.6;
+}
+#banner-sub { font-size:10px; color:var(--dim); margin-top:3px; }
+
+/* ── 3DS top bg ── */
+#top-3ds-bg {
+  display:none; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 60%, rgba(140,80,255,.15) 0%, transparent 70%);
+  pointer-events:none;
+}
+body.tds #top-3ds-bg { display:block; }
+
+/* ── No game message ── */
+#no-game-msg {
+  position:absolute; inset:0; z-index:1;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:8px;
+  pointer-events:none;
+  transition:opacity .3s;
+}
+#no-game-msg.hidden { opacity:0; }
+.ngm-icon { font-size:32px; animation:float 3s ease-in-out infinite; }
+@keyframes float { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+.ngm-txt {
+  font-family:'Press Start 2P',monospace; font-size:8px;
+  color:var(--dim); text-align:center;
+}
+
+/* ════════════════════════════════════════════
+   BOTTOM SCREEN
+════════════════════════════════════════════ */
+#bottom {
+  flex:1; overflow:hidden;
+  display:flex; flex-direction:column;
+  background:linear-gradient(160deg, var(--bottom-bg1), var(--bottom-bg2));
+  position:relative;
+}
+
+/* ── Path bar ── */
+#path-bar {
+  display:flex; align-items:center; gap:6px;
+  padding:5px 12px;
+  background:var(--bar-bg);
+  border-bottom:1px solid var(--card-border);
+  flex-shrink:0;
+}
+#path-icon { font-size:12px; }
+#path-txt {
+  font-family:'Press Start 2P',monospace; font-size:7px;
+  color:var(--path-color); flex:1;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+#path-back {
+  font-family:'Press Start 2P',monospace; font-size:7px;
+  color:var(--accent); cursor:pointer;
+  display:none; flex-shrink:0;
+}
+#path-back.show { display:block; }
+
+/* ── Game title ── */
+#title {
+  padding:5px 14px;
+  font-family:'Press Start 2P',monospace; font-size:8px;
+  color:var(--gold); letter-spacing:.5px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  flex-shrink:0;
+  background:var(--bar-bg);
+  border-bottom:1px solid var(--card-border);
+}
+
+/* ════════════════════════════════════════════
+   CAROUSEL — DSi + 3DS (grille d'icônes)
+════════════════════════════════════════════ */
+#carousel {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  display:none; /* affiché via JS selon thème */
+  padding:8px; gap:0;
+  align-content:start;
+  scrollbar-width:thin; scrollbar-color:var(--card-border) transparent;
+}
+body.dsi #carousel,
+body.tds #carousel { display:grid; grid-template-columns:repeat(4,1fr); }
+
+@media(min-width:480px) {
+  body.dsi #carousel,
+  body.tds #carousel { grid-template-columns:repeat(5,1fr); }
+}
+
+.c-card {
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  padding:8px 3px; border-radius:8px; cursor:pointer;
+  transition:background .15s, transform .12s;
+  position:relative; user-select:none;
+}
+.c-card:active { transform:scale(.92); background:var(--selected-bg); }
+
+/* 3DS cards have border */
+body.tds .c-card {
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:10px;
+  margin:3px;
+}
+body.tds .c-card:active { border-color:var(--accent); }
+
+.c-icon {
+  width:50px; height:46px; border-radius:7px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+  position:relative; overflow:hidden;
+}
+.c-icon img { width:100%; height:100%; object-fit:cover; border-radius:6px; }
+.c-icon-ext {
+  position:absolute; bottom:0; left:0; right:0;
+  background:rgba(0,0,0,.75);
+  font-family:'Press Start 2P',monospace; font-size:5px;
+  text-align:center; color:#aaa; padding:1.5px;
+}
+.c-name {
+  font-size:8px; text-align:center;
+  color:var(--text); line-height:1.3;
+  word-break:break-word;
+  display:-webkit-box; -webkit-line-clamp:2;
+  -webkit-box-orient:vertical; overflow:hidden;
+}
+.c-badge {
+  position:absolute; top:3px; right:3px;
+  font-family:'Press Start 2P',monospace; font-size:5px;
+  padding:1px 3px; border-radius:2px;
+}
+
+/* folder card */
+.c-card.is-folder .c-icon { background:linear-gradient(135deg,#1a3060,#0d1a3a); }
+body.tds .c-card.is-folder .c-icon { background:linear-gradient(135deg,#1a0a3a,#0d0520); }
+
+/* ════════════════════════════════════════════
+   LIST VIEW — R4 + Wood
+════════════════════════════════════════════ */
+#list-view {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  display:none;
+  scrollbar-width:thin; scrollbar-color:var(--card-border) transparent;
+}
+body.r4  #list-view,
+body.wood #list-view { display:block; }
+
+/* hide carousel pour R4/Wood */
+body.r4  #carousel,
+body.wood #carousel { display:none; }
+
+.l-item {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; cursor:pointer;
+  transition:background .1s;
+  user-select:none;
+}
+body.r4  .l-item { border-bottom:1px solid #111; }
+body.wood .l-item { border-bottom:1px solid rgba(200,120,0,.08); margin:2px 4px; border-radius:6px; border:1px solid transparent; }
+
+.l-item:active { background:var(--selected-bg); }
+body.wood .l-item:active { border-color:var(--selected-bdr); }
+
+.l-icon {
+  width:32px; height:30px; border-radius:5px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; background:var(--card-bg);
+  border:1px solid var(--card-border);
+}
+.l-info { flex:1; min-width:0; }
+.l-name {
+  font-size:12px; color:var(--text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.l-sub {
+  font-family:'Press Start 2P',monospace; font-size:7px;
+  color:var(--dim); margin-top:2px;
+}
+.l-badge {
+  font-family:'Press Start 2P',monospace; font-size:7px;
+  padding:2px 6px; border-radius:3px; flex-shrink:0;
+}
+
+/* ════════════════════════════════════════════
+   EMPTY ZONE
+════════════════════════════════════════════ */
+#empty-zone {
+  position:absolute;
+  top:88px; left:0; right:0; bottom:52px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:12px;
+  pointer-events:none; transition:opacity .3s;
+}
+#empty-zone.hidden { opacity:0; pointer-events:none; }
+.ez-icon { font-size:38px; animation:float 3s ease-in-out infinite; }
+.ez-txt {
+  font-family:'Press Start 2P',monospace; font-size:8px;
+  color:var(--dim); text-align:center; line-height:2;
+}
+.ez-txt em { color:var(--accent); font-style:normal; }
+.ez-btn {
+  padding:10px 18px; border:none; border-radius:8px; cursor:pointer;
+  background:linear-gradient(135deg,var(--accent),rgba(0,120,180,.8));
+  color:#000; font-family:'Press Start 2P',monospace; font-size:8px;
+  box-shadow:0 3px 14px var(--accent-glow);
+  transition:transform .15s; pointer-events:all;
+}
+.ez-btn:active { transform:scale(.95); }
+
+/* ════════════════════════════════════════════
+   BOTTOM MENU
+════════════════════════════════════════════ */
+#menu {
+  display:flex; flex-shrink:0;
+  background:var(--menu-bg);
+  border-top:1px solid var(--menu-border);
+  backdrop-filter:blur(12px);
+}
+.menu-btn {
+  flex:1; padding:8px 2px;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  border:none; background:none; cursor:pointer;
+  color:var(--dim); transition:color .2s;
+}
+.menu-btn:active { color:var(--accent); }
+.menu-icon { font-size:16px; }
+.menu-lbl {
+  font-family:'Press Start 2P',monospace; font-size:6px;
+  color:inherit;
+}
+
+/* ════════════════════════════════════════════
+   EMULATEUR
+════════════════════════════════════════════ */
+#emu {
+  position:fixed; inset:0; z-index:500;
+  background:#000;
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none;
+  transition:opacity .3s;
+}
+#emu.show { opacity:1; pointer-events:all; }
+
+#emu-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 10px;
+  background:rgba(0,0,0,.95);
+  border-bottom:1px solid rgba(0,212,255,.15);
+  flex-shrink:0; z-index:10;
+}
+#emu-back, #emu-fs {
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15);
+  color:#fff; border-radius:6px; padding:5px 10px;
+  font-size:13px; cursor:pointer; flex-shrink:0;
+}
+#emu-title {
+  font-family:'Press Start 2P',monospace; font-size:7px; color:#00d4ff;
+  flex:1; text-align:center; overflow:hidden;
+  white-space:nowrap; text-overflow:ellipsis; padding:0 8px;
+}
+
+#emu-load {
+  position:absolute; inset:0;
+  background:#000015; z-index:5;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:18px;
+  transition:opacity .4s;
+}
+#emu-load.done { opacity:0; pointer-events:none; }
+
+.el-logo {
+  font-family:'Press Start 2P',monospace; font-size:16px;
+  color:#00d4ff; text-shadow:0 0 20px #00d4ff;
+  animation:glow 1.5s ease-in-out infinite;
+}
+@keyframes glow {
+  0%,100%{ text-shadow:0 0 12px #00d4ff; }
+  50%     { text-shadow:0 0 35px #00d4ff, 0 0 70px #00d4ff; }
+}
+.el-bar-wrap {
+  width:200px; height:5px;
+  background:rgba(255,255,255,.1); border-radius:3px; overflow:hidden;
+}
+.el-bar {
+  height:100%; width:0;
+  background:linear-gradient(90deg,#00d4ff,#ff6b9d);
+  border-radius:3px; transition:width .1s;
+}
+.el-txt {
+  font-family:'Press Start 2P',monospace; font-size:7px;
+  color:rgba(255,255,255,.4);
+}
+
+#game { width:100%; flex:1; }
+
+/* ════════════════════════════════════════════
+   CONTEXT MENU
+════════════════════════════════════════════ */
+#ctx-menu {
+  position:fixed; z-index:800;
+  background:rgba(3,8,25,.97);
+  border:1px solid rgba(0,212,255,.25);
+  border-radius:10px; padding:6px;
+  min-width:150px; display:none;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.7);
+}
+#ctx-menu.show { display:block; }
+.ctx-item {
+  padding:9px 13px; border-radius:6px;
+  cursor:pointer; font-size:12px; color:#e8f4fd;
+  display:flex; align-items:center; gap:8px;
+  transition:background .12s;
+}
+.ctx-item:active { background:rgba(0,212,255,.12); }
+.ctx-danger { color:#ff6666; }
+.ctx-sep { height:1px; background:rgba(255,255,255,.07); margin:4px 0; }
+
+/* ════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════ */
+#toast {
+  position:fixed; bottom:65px; left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:rgba(0,15,35,.97);
+  border:1px solid var(--accent, #00d4ff);
+  color:#e8f4fd; padding:8px 16px; border-radius:8px;
+  font-family:'Press Start 2P',monospace; font-size:8px;
+  z-index:999; opacity:0;
+  transition:opacity .25s, transform .25s;
+  white-space:nowrap; pointer-events:none;
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ════════════════════════════════════════════
+   SCROLLBARS
+════════════════════════════════════════════ */
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--card-border,rgba(100,180,255,.2)); border-radius:2px; }

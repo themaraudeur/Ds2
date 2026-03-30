@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#000010">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="TWiLight DS">
+<title>DS Console</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dsi">
+
+<!-- ══ BOOT ══ -->
+<div id="boot">
+  <div class="boot-health">Pour éviter la fatigue oculaire, joue dans un endroit éclairé.</div>
+  <div class="boot-nintendo">NINTENDO</div>
+  <div class="boot-ds">DS</div>
+  <div class="boot-tap">TOUCHE L'ÉCRAN</div>
+</div>
+
+<!-- ══ MAIN UI ══ -->
+<div id="ui">
+
+  <!-- ÉCRAN DU HAUT -->
+  <div id="top">
+    <!-- DSi : bannière animée du jeu sélectionné -->
+    <div id="banner">
+      <div id="banner-icon"></div>
+      <div id="banner-info">
+        <div id="banner-title">TWiLight Menu++</div>
+        <div id="banner-sub">Sélectionne un jeu</div>
+      </div>
+    </div>
+    <!-- 3DS : fond avec titre -->
+    <div id="top-3ds-bg"></div>
+    <div id="top-bar">
+      <div id="top-logo">TWiLight<span>++</span></div>
+      <div id="top-status">
+        <span id="top-clock">--:--</span>
+        <div id="top-batt"><div id="top-batt-fill"></div></div>
+      </div>
+    </div>
+    <div id="no-game-msg">
+      <div class="ngm-icon">🎮</div>
+      <div class="ngm-txt">Aucun jeu chargé</div>
+    </div>
+  </div>
+
+  <!-- ÉCRAN DU BAS -->
+  <div id="bottom">
+
+    <!-- Barre titre + chemin -->
+    <div id="path-bar">
+      <span id="path-icon">📁</span>
+      <span id="path-txt">ROMs</span>
+      <span id="path-back" onclick="goBack()">◀ Retour</span>
+    </div>
+
+    <!-- Titre jeu sélectionné -->
+    <div id="title">AUCUN JEU</div>
+
+    <!-- Carousel DSi (icônes en grille) -->
+    <div id="carousel"></div>
+
+    <!-- Liste R4/Wood -->
+    <div id="list-view"></div>
+
+    <!-- Zone vide -->
+    <div id="empty-zone">
+      <div class="ez-icon">🎮</div>
+      <div class="ez-txt">Charge tes ROMs<br><em>NDS • GBA • GB • NES • SNES</em></div>
+      <button class="ez-btn" onclick="pickFolder('roms')">+ CHARGER ROM</button>
+    </div>
+
+    <!-- Menu du bas -->
+    <div id="menu">
+      <button class="menu-btn" id="btn-theme" onclick="cycleTheme()">
+        <span class="menu-icon">🎨</span>
+        <span class="menu-lbl">THÈME</span>
+      </button>
+      <button class="menu-btn" id="btn-roms" onclick="pickFolder('roms')">
+        <span class="menu-icon">📁</span>
+        <span class="menu-lbl">ROMS</span>
+      </button>
+      <button class="menu-btn" id="btn-saves" onclick="pickFolder('saves')">
+        <span class="menu-icon">💾</span>
+        <span class="menu-lbl">SAVES</span>
+      </button>
+      <button class="menu-btn" id="btn-images" onclick="pickFolder('images')">
+        <span class="menu-icon">🖼</span>
+        <span class="menu-lbl">ART</span>
+      </button>
+    </div>
+
+  </div><!-- /#bottom -->
+
+</div><!-- /#ui -->
+
+<!-- ══ EMULATEUR ══ -->
+<div id="emu">
+  <div id="emu-bar">
+    <button id="emu-back" onclick="exitEmu()">◀ Quitter</button>
+    <div id="emu-title">—</div>
+    <button id="emu-fs" onclick="toggleFS()">⛶</button>
+  </div>
+  <div id="emu-load">
+    <div class="el-logo">TWiLight</div>
+    <div class="el-bar-wrap"><div class="el-bar" id="el-bar"></div></div>
+    <div class="el-txt" id="el-txt">INITIALISATION...</div>
+  </div>
+  <div id="game"></div>
+</div>
+
+<!-- ══ CONTEXT MENU ══ -->
+<div id="ctx-menu">
+  <div class="ctx-item" id="ctx-launch">▶ Lancer</div>
+  <div class="ctx-item" id="ctx-info">ℹ Infos</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item ctx-danger" id="ctx-delete">🗑 Supprimer</div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div id="toast"></div>
+
+<!-- ══ FILE INPUTS ══ -->
+<input type="file" id="input-roms"   accept=".nds,.gba,.gb,.gbc,.nes,.sfc,.smc,.n64,.z64,.v64,.bin,.iso,.zip" multiple style="display:none">
+<input type="file" id="input-saves"  accept=".sav,.srm,.state" multiple style="display:none">
+<input type="file" id="input-images" accept=".png,.jpg,.jpeg,.webp,.bmp" multiple style="display:none">
+<input type="file" id="input-folder" webkitdirectory multiple style="display:none">
+
+<script src="app.js"></script>
+</body>
+</html>
